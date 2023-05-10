@@ -1,0 +1,25 @@
+version: "3.5"
+
+services:
+  db:
+    container_name: "password_bot_db"
+    build: ./db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: "bot"
+      MYSQL_ROOT_PASSWORD: "password"
+    expose:
+      - "3306"
+    volumes:
+      - mysql_volume:/var/lib/mysql
+
+  bot:
+    container_name: "password_bot"
+    build: ./bot
+    restart: unless-stopped
+    env_file:
+      - bot/configs/mysql_conf.env
+      - bot/configs/bot_conf.env
+
+volumes:
+  mysql_volume:
